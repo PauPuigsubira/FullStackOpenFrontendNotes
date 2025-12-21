@@ -23,12 +23,16 @@ const App = () => {
   const handleNewNote = (event) => {
     event.preventDefault()
     const newNote = { 
-      id: notes.length + 1,
       content: note,
       important: Math.random() < 0.5,
     }
-    setNotes(notes.concat(newNote))
-    setNote('')
+
+    serviceNotes
+      .post(newNote)
+      .then((returnedNote) => {
+        setNotes(notes.concat(returnedNote))
+        setNote('')
+      })
   }
 
   useEffect(() => {

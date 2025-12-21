@@ -40,4 +40,10 @@ const get = () => {
     .then((response) => response.data.concat(nonExisting))
 }
 
-export default { get }
+const post = (newNote) => {
+  return axios
+    .post(baseUrl, newNote)
+    .then((response) => response.data)
+}
+
+export default { get, post }
