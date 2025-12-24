@@ -29,15 +29,19 @@ const exampleNotes = [
 const baseUrl = '/api/notes'
 
 const get = () => {
+/*
   const nonExisting = {
     id: 10000,
     content: 'This note is not saved to the server',
     important: true,
   }
-
   return axios
     .get(`${baseUrl}`)
     .then((response) => response.data.concat(nonExisting))
+*/
+  return axios
+    .get(`${baseUrl}`)
+    .then((response) => response.data)
 }
 
 const post = (newNote) => {
