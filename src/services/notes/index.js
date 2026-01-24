@@ -1,53 +1,37 @@
 import axios from 'axios'
-/*
-const server = 'https://my-json-server.typicode.com/PauPuigsubira/jsonserverdemo'
-const service = 'notes'
-*/
-
-/*
-const exampleNotes = [
-  {
-    id: 1,
-    content: 'HTML is easy',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    important: true,
-  },
-]
-*/
-
-//const server = 'http://localhost:3001'
-//const service = 'api/notes'
 const baseUrl = '/api/notes'
 
-const get = () => {
+let token = null
+const setToken = newToken => {
+  token = `Bearer ${newToken}`
+}
+
+const getAll = () => {
+  const request = axios.get(baseUrl)
+  return request.then(response => response.data)
+}
 /*
-  const nonExisting = {
-    id: 10000,
-    content: 'This note is not saved to the server',
-    important: true,
-  }
-  return axios
-    .get(`${baseUrl}`)
-    .then((response) => response.data.concat(nonExisting))
+const create = newObject => {
+  const request = axios.post(baseUrl, newObject)
+  return request.then(response => response.data)
+}
 */
-  return axios
-    .get(`${baseUrl}`)
-    .then((response) => response.data)
+const create = async newObject => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.post(baseUrl, newObject, config)  
+return response.data
 }
 
-const post = (newNote) => {
-  return axios
-    .post(baseUrl, newNote)
-    .then((response) => response.data)
+const update = (id, newObject) => {
+  const request = axios.put(`${baseUrl}/${id}`, newObject)
+  return request.then(response => response.data)
 }
 
-export default { get, post }
+export default {
+  getAll,
+  create,
+  update,
+  setToken
+}
