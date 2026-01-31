@@ -5,6 +5,7 @@ import Notification from './components/Notification'
 import Login from './components/Login'
 import NoteForm from './components/NoteForm'
 import UserCard from './components/UserCard'
+import Togglable from './components/Togglable'
 import noteService from './services/notes'
 import loginService from './services/login'
 
@@ -12,13 +13,43 @@ import './styles/index.css'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const addNote = (noteObject) => {    
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+      })
+  }
+
+  //const [loginVisible, setLoginVisible] = useState(false)
+/*
+  const loginForm = () => {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
+    return (
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setLoginVisible(true)}>log in</button>
+        </div>
+        <div style={showWhenVisible}>
+          <Login
+            handleLogin = {handleLogin}
+            username = {username}
+            setUsername = {setUsername}
+            password = {password}
+            setPassword = {setPassword}
+          />
+          <button onClick={() => setLoginVisible(false)}>cancel</button>
+        </div>
+      </div>
+    )
+  }
+*/
   useEffect(() => {
     noteService.getAll().then(initialNotes => {
       setNotes(initialNotes)
@@ -33,19 +64,6 @@ const App = () => {
       noteService.setToken(user.token)
     }
   }, [])
-
-  const addNote = event => {
-    event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5
-    }
-
-    noteService.create(noteObject).then(returnedNote => {
-      setNotes(notes.concat(returnedNote))
-      setNewNote('')
-    })
-  }
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -67,9 +85,9 @@ const App = () => {
       })
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    
+  // const handleLogin = async (event) => {
+  //   event.preventDefault()
+  const handleLogin = async ({username, password}) => {
     try {
       const user = await loginService.login({
         username, password,
@@ -81,8 +99,8 @@ const App = () => {
 
       noteService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
+      //setUsername('')
+      //setPassword('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -96,14 +114,14 @@ const App = () => {
     window.localStorage.removeItem('loggedNoteappUser')
     noteService.setToken(null)
     setUser(null)
-    setUsername('')
-    setPassword('')
+    //setUsername('')
+    //setPassword('')
   }
-
+/*
   const handleNoteChange = event => {
     setNewNote(event.target.value)
   }
-
+*/
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 /*
   const loginForm = () => (
@@ -148,24 +166,30 @@ const App = () => {
       {
         user === null
         ?
-        <Login
-          handleLogin = {handleLogin}
-          username = {username}
-          setUsername = {setUsername}
-          password = {password}
-          setPassword = {setPassword}
-        />
+          //loginForm()
+          <Togglable buttonLabel='login'>
+            <Login
+              handleLogin = {handleLogin}
+              //username = {username}
+              //handleUsernameChange = {({ target }) => setUsername(target.value)}
+              //password = {password}
+              //handlePasswordChange = {({ target }) => setPassword(target.value)}
+            />
+          </Togglable>
         :
         <div>
           <UserCard
             user = {user}
             handleLogout = {handleLogout}
           />
-          <NoteForm
-            addNote = {addNote}
-            newNote = {newNote}
-            handleNoteChange = {handleNoteChange} 
-          />
+          <Togglable buttonLabel='new note'>
+            <NoteForm
+              //addNote = {addNote}
+              //newNote = {newNote}
+              //handleNoteChange = {handleNoteChange}
+              createNote={addNote}
+            />
+          </Togglable>
         </div>
       }
 
