@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Footer from './components/Footer'
 import Note from './components/Note'
 import Notification from './components/Notification'
@@ -17,7 +17,10 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [user, setUser] = useState(null)
 
-  const addNote = (noteObject) => {    
+  const noteFormRef = useRef()
+
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
       .then(returnedNote => {
@@ -26,7 +29,7 @@ const App = () => {
   }
 
   //const [loginVisible, setLoginVisible] = useState(false)
-/*
+  /*
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
     const showWhenVisible = { display: loginVisible ? '' : 'none' }
@@ -87,7 +90,7 @@ const App = () => {
 
   // const handleLogin = async (event) => {
   //   event.preventDefault()
-  const handleLogin = async ({username, password}) => {
+  const handleLogin = async ({ username, password }) => {
     try {
       const user = await loginService.login({
         username, password,
@@ -95,7 +98,7 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
-      ) 
+      )
 
       noteService.setToken(user.token)
       setUser(user)
@@ -107,7 +110,7 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
       console.log(exception)
-    }  
+    }
   }
 
   const handleLogout = () => {
@@ -117,13 +120,13 @@ const App = () => {
     //setUsername('')
     //setPassword('')
   }
-/*
+  /*
   const handleNoteChange = event => {
     setNewNote(event.target.value)
   }
 */
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
-/*
+  /*
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -145,7 +148,7 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
   const noteForm = () => (
@@ -155,7 +158,7 @@ const App = () => {
         onChange={handleNoteChange}
       />
       <button type="submit">save</button>
-    </form>  
+    </form>
   )
 */
   //console.log('localstorage user:', window.localStorage.loggedNoteappUser)
@@ -165,7 +168,7 @@ const App = () => {
       <Notification message={errorMessage} />
       {
         user === null
-        ?
+          ?
           //loginForm()
           <Togglable buttonLabel='login'>
             <Login
@@ -176,21 +179,21 @@ const App = () => {
               //handlePasswordChange = {({ target }) => setPassword(target.value)}
             />
           </Togglable>
-        :
-        <div>
-          <UserCard
-            user = {user}
-            handleLogout = {handleLogout}
-          />
-          <Togglable buttonLabel='new note'>
-            <NoteForm
+          :
+          <div>
+            <UserCard
+              user = {user}
+              handleLogout = {handleLogout}
+            />
+            <Togglable buttonLabel='new note' ref={noteFormRef}>
+              <NoteForm
               //addNote = {addNote}
               //newNote = {newNote}
               //handleNoteChange = {handleNoteChange}
-              createNote={addNote}
-            />
-          </Togglable>
-        </div>
+                createNote={addNote}
+              />
+            </Togglable>
+          </div>
       }
 
       {
@@ -219,7 +222,7 @@ const App = () => {
         <form onSubmit={addNote}>
           <input value={newNote} onChange={handleNoteChange} />
           <button type="submit">save</button>
-        </form>        
+        </form>
       */
       }
 

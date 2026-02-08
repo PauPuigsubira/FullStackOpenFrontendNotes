@@ -1,14 +1,14 @@
 import { useState } from 'react'
 
 const Login = ({
-  handleLogin, 
+  handleLogin,
 }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const appLogin = async (event) => {
     event.preventDefault()
-    await handleLogin({username, password })
+    await handleLogin({ username, password })
   /*
     try {
       const user = await loginService.login({
@@ -17,7 +17,7 @@ const Login = ({
 
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
-      ) 
+      )
 
       noteService.setToken(user.token)
       setUser(user)
@@ -29,10 +29,10 @@ const Login = ({
         setErrorMessage(null)
       }, 5000)
       console.log(exception)
-    }  
+    }
   */
   }
-  
+
   return(
     <>
       <h2>Login</h2>
@@ -43,7 +43,7 @@ const Login = ({
             <input
               type="text"
               value={username}
-              onChange={({target}) => {setUsername(target.value)}}
+              onChange={({ target }) => {setUsername(target.value)}}
               placeholder="newuser"
             />
           </label>
@@ -54,7 +54,7 @@ const Login = ({
             <input
               type="password"
               value={password}
-              onChange={({target}) => {setPassword(target.value)}}
+              onChange={({ target }) => {setPassword(target.value)}}
               placeholder="s3curep@ssword"
             />
           </label>
